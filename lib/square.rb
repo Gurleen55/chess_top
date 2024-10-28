@@ -17,4 +17,8 @@ class Square
   def show_adjacent_squares
     @adjacent_sqaures.map { |square| "(#{square.x}, #{square.y})" }
   end
+
+  def to_s
+    '.'
+  end
 end

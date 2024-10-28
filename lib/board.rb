@@ -28,4 +28,14 @@ class Board
       end
     end
   end
+
+  def display
+    8.times do |i|
+      row = ''
+      8.times do |j|
+        row += "#{@squares[[i, j]]} "
+      end
+      puts row.strip
+    end
+  end
 end

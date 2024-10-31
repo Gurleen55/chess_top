@@ -1,10 +1,18 @@
+# frozen_string_literal: true
+
+# this class will create square box that will be used in chess
 class Square
-  attr_accessor :x, :y, :adjacent_sqaures
+  attr_accessor :x, :y, :adjacent_sqaures, :piece
+
+  # ASNI color codes
+  PURPLE = "\e[45m"
+  GREY = "\e[105m"
 
   def initialize(x, y)
     @x = x
     @y = y
     @adjacent_sqaures = []
+    @color = (x + y).even? ? GREY : PURPLE
   end
 
   def add_adjacent_squares(square)
@@ -19,6 +27,6 @@ class Square
   end
 
   def to_s
-    '.'
+    "#{@color} #{piece.nil? ? ' ' : piece.symbol} \e[0m"
   end
 end

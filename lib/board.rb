@@ -12,7 +12,7 @@ class Board
         @squares[[i, j]] = Square.new(i, j)
       end
     end
-    connect_squares
+    # connect_squares
   end
 
   # def connect_squares
@@ -32,12 +32,16 @@ class Board
   # end
 
   def display
+    row_end = " " # rubocop:disable Style/StringLiterals
     7.downto(0) do |i|
-      row = ''
+      row = "#{i} "
       8.times do |j|
         row += (@squares[[i, j]]).to_s
+        row_end += "  #{j}" if i.zero?
       end
       puts row.strip
+      puts row_end if i.zero?
+      puts "\n" if i.zero?
     end
   end
 end

@@ -10,8 +10,14 @@ class Game
     @player1 = player1
     @player2 = player2
     @board = board
+  end
+
+  def board_setup
     assign_pieces(player1)
     populate_board(player1)
+    assign_pieces(player2)
+    populate_board(player2)
+    puts "\n"
     @board.display
   end
 
@@ -23,9 +29,7 @@ class Game
   end
 
   def assign_pieces(player)
-    player.pieces = {
-      knights: [Knight.new([0, 2]), Knight.new([0, 5])]
-    }
+    assign_knights(player)
   end
 
   def add_piece(piece)
@@ -41,5 +45,19 @@ class Game
     # select new square
     board.squares[to_position].piece = piece
     board.display
+  end
+
+  private
+
+  def assign_knights(player)
+    if player.piece_color == 'hollow'
+      player.pieces = {
+        knights: [Knight.new([0, 2], '♘'), Knight.new([0, 5], '♘')]
+      }
+    elsif player.piece_color == 'filled'
+      player.pieces = {
+        knights: [Knight.new([7, 2], '♞'), Knight.new([7, 5], '♞')]
+      }
+    end
   end
 end

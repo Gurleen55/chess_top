@@ -4,7 +4,7 @@ require_relative 'board'
 class Knight
   attr_accessor :symbol, :position
 
-  def initialize(position, symbol = '♘')
+  def initialize(position, symbol)
     @position = position
     @symbol = symbol
   end
@@ -22,7 +22,7 @@ class Knight
     moves.select { |mi, mj| mi.between?(0, 7) && mj.between?(0, 7) }
   end
 
-  def move_to(position)
+  def legal_move?(position)
     vaild_moves = vaild_moves(@position)
     if vaild_moves.include?(position)
       @position = position

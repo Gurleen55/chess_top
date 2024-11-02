@@ -44,6 +44,7 @@ class Game
     selected_square.piece = nil
     # select new square
     board.squares[to_position].piece = piece
+    piece.position = to_position
     board.display
   end
 
@@ -62,6 +63,16 @@ class Game
       puts 'please choose a number between 0 - 7'
     end
     [row, column]
+  end
+
+  def start
+    turn = 0
+    loop do
+      player = turn.even? ? player1 : player2
+      other_player = turn.even? ? player2 : player1
+      turn += 1
+      turn(player)
+    end
   end
 
   def turn(player)
@@ -98,7 +109,14 @@ class Game
   end
 
   def right_destination_square?(piece, destination_square_coordinates)
-    return true if piece.legal_move?(destination_square_coordinates)
+    if piece.legal_move?(destination_square_coordinates)
+
+      if !board.squares[destination_square_coordinates].piece.nil? && board.squares[destination_square_coordinates].piece.type != piece.type
+        return true
+      elsif board.squares[destination_square_coordinates].piece.nil?
+        return true
+      end
+    end
 
     puts 'illegal move'
     false

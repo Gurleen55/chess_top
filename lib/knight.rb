@@ -26,7 +26,7 @@ class Knight
   def legal_move?(position)
     valid_moves = valid_moves(@position)
     if valid_moves.include?(position)
-      @position = position
+      true
     else
       false
     end

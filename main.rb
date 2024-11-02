@@ -1,6 +1,8 @@
 require_relative 'lib/player'
 require_relative 'lib/game'
 
-# player1 = Player.new('Adam', 'white')
-# player2 = Player.new('Eve', 'Black')
-# game = Game.new(player1, player2)
+player1 = Player.new('Adam', 'hollow')
+player2 = Player.new('Eve', 'filled')
+game = Game.new(player1, player2)
+game.board_setup
+game.turn(player1)

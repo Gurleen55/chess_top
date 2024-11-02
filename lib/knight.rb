@@ -2,11 +2,12 @@ require_relative 'board'
 
 # this class will be used tp implement movement of knight on the chess board
 class Knight
-  attr_accessor :symbol, :position
+  attr_accessor :symbol, :position, :type
 
-  def initialize(position, symbol)
+  def initialize(position, symbol, type)
     @position = position
     @symbol = symbol
+    @type = type
   end
 
   def valid_moves(position = @position)
@@ -23,11 +24,11 @@ class Knight
   end
 
   def legal_move?(position)
-    vaild_moves = vaild_moves(@position)
-    if vaild_moves.include?(position)
+    valid_moves = valid_moves(@position)
+    if valid_moves.include?(position)
       @position = position
     else
-      puts 'illegal move, try again'
+      false
     end
   end
 end

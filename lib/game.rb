@@ -13,9 +13,8 @@ class Game
   end
 
   def board_setup
-    assign_pieces(player1)
+    assign_pieces
     populate_board(player1)
-    assign_pieces(player2)
     populate_board(player2)
     puts "\n"
     @board.display
@@ -28,8 +27,8 @@ class Game
     end
   end
 
-  def assign_pieces(player)
-    assign_knights(player)
+  def assign_pieces
+    assign_knights
   end
 
   def add_piece(piece)
@@ -85,11 +84,11 @@ class Game
     end
     loop do
       puts 'these are your available moves'
-      p available_sqaures(board.squares[selected_square_coordinates].piece)
+      p available_sqaures(board.squares[selected_square_coordinates].piece, player)
       puts 'where do you want to move'
       destination_square_coordinates = user_input(player)
       break if right_destination_square?(board.squares[selected_square_coordinates].piece,
-                                         destination_square_coordinates)
+                                         destination_square_coordinates, player)
     end
     move_piece(board.squares[selected_square_coordinates].piece, selected_square_coordinates,
                destination_square_coordinates)
@@ -97,8 +96,8 @@ class Game
 
   private
 
-  def available_sqaures(piece)
-    piece.valid_moves
+  def available_sqaures(piece, player)
+    piece.valid_moves(player, @board)
   end
 
   def right_chosen_square?(square, player)
@@ -108,15 +107,8 @@ class Game
     false
   end
 
-  def right_destination_square?(piece, destination_square_coordinates)
-    if piece.legal_move?(destination_square_coordinates)
-
-      if !board.squares[destination_square_coordinates].piece.nil? && board.squares[destination_square_coordinates].piece.type != piece.type
-        return true
-      elsif board.squares[destination_square_coordinates].piece.nil?
-        return true
-      end
-    end
+  def right_destination_square?(piece, destination_square_coordinates, player)
+    return true if piece.legal_move?(destination_square_coordinates, player, @board)
 
     puts 'illegal move'
     false
@@ -132,15 +124,12 @@ class Game
   #   selected_square
   # end
 
-  def assign_knights(player)
-    if player.piece_type == 'hollow'
-      player.pieces = {
-        knights: [Knight.new([0, 2], '♘', 'hollow'), Knight.new([0, 5], '♘', 'hollow')]
-      }
-    elsif player.piece_type == 'filled'
-      player.pieces = {
-        knights: [Knight.new([7, 2], '♞', 'filled'), Knight.new([7, 5], '♞', 'filled')]
-      }
-    end
+  def assign_knights
+    player1.pieces = {
+      knights: [Knight.new([0, 2], '♘', 'hollow'), Knight.new([0, 5], '♘', 'hollow')]
+    }
+    player2.pieces = {
+      knights: [Knight.new([7, 2], '♞', 'filled'), Knight.new([7, 5], '♞', 'filled')]
+    }
   end
 end

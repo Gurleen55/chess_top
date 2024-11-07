@@ -1,5 +1,4 @@
 require_relative 'square'
-require_relative 'knight'
 
 # this class will create a squares with co-ordinates that will represent chess board
 class Board

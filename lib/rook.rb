@@ -15,6 +15,15 @@ class Rook
     moves
   end
 
+  def legal_move?(position, player, board)
+    valid_moves = valid_moves(player, board)
+    if valid_moves.include?(position)
+      true
+    else
+      false
+    end
+  end
+
   private
 
   def valid_moves_with_direction(player, board, direction, orientation)

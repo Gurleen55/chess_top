@@ -2,6 +2,7 @@ require_relative 'board'
 require_relative 'knight'
 require_relative 'player'
 require_relative 'square'
+require_relative 'rook'
 
 class Game
   attr_accessor :board, :player1, :player2
@@ -21,14 +22,13 @@ class Game
   end
 
   def populate_board(player)
-    pieces_hash = player.pieces
-    pieces_hash.each_value do |value|
-      value.each { |piece| add_piece(piece) }
-    end
+    pieces_array = player.pieces
+    pieces_array.each { |piece| add_piece(piece) }
   end
 
   def assign_pieces
     assign_knights
+    assign_rooks
   end
 
   def add_piece(piece)
@@ -125,11 +125,13 @@ class Game
   # end
 
   def assign_knights
-    player1.pieces = {
-      knights: [Knight.new([0, 2], '♘', 'hollow'), Knight.new([0, 5], '♘', 'hollow')]
-    }
-    player2.pieces = {
-      knights: [Knight.new([7, 2], '♞', 'filled'), Knight.new([7, 5], '♞', 'filled')]
-    }
+    player1.pieces.concat([Knight.new([0, 2], '♘', 'hollow'), Knight.new([0, 5], '♘', 'hollow')])
+
+    player2.pieces.concat([Knight.new([7, 2], '♞', 'filled'), Knight.new([7, 5], '♞', 'filled')])
+  end
+
+  def assign_rooks
+    player1.pieces.concat([Rook.new([0, 0], '♖', 'hollow'), Rook.new([0, 7], '♖', 'hollow')])
+    player2.pieces.concat([Rook.new([7, 0], '♜', 'filled'), Rook.new([7, 7], '♜', 'filled')])
   end
 end

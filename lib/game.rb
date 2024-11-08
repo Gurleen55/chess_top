@@ -3,6 +3,7 @@ require_relative 'knight'
 require_relative 'player'
 require_relative 'square'
 require_relative 'rook'
+require_relative 'bishop'
 
 class Game
   attr_accessor :board, :player1, :player2
@@ -29,6 +30,7 @@ class Game
   def assign_pieces
     assign_knights
     assign_rooks
+    assign_bishops
   end
 
   def add_piece(piece)
@@ -125,13 +127,18 @@ class Game
   # end
 
   def assign_knights
-    player1.pieces.concat([Knight.new([0, 2], '♘', 'hollow'), Knight.new([0, 5], '♘', 'hollow')])
+    player1.pieces.concat([Knight.new([0, 1], '♘', 'hollow'), Knight.new([0, 6], '♘', 'hollow')])
 
-    player2.pieces.concat([Knight.new([7, 2], '♞', 'filled'), Knight.new([7, 5], '♞', 'filled')])
+    player2.pieces.concat([Knight.new([7, 1], '♞', 'filled'), Knight.new([7, 6], '♞', 'filled')])
   end
 
   def assign_rooks
     player1.pieces.concat([Rook.new([0, 0], '♖', 'hollow'), Rook.new([0, 7], '♖', 'hollow')])
     player2.pieces.concat([Rook.new([7, 0], '♜', 'filled'), Rook.new([7, 7], '♜', 'filled')])
+  end
+
+  def assign_bishops
+    player1.pieces.concat([Bishop.new([0, 2], '♗', 'hollow'), Bishop.new([0, 5], '♗', 'hollow')])
+    player2.pieces.concat([Bishop.new([7, 2], '♝', 'filled'), Bishop.new([7, 5], '♝', 'filled')])
   end
 end

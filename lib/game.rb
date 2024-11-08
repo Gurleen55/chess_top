@@ -14,6 +14,10 @@ class Game
     @player1 = player1
     @player2 = player2
     @board = board
+    @selected_square_coordinates = nil
+    @destination_square_coordinates = nil
+    @turn = 0
+    board_setup
   end
 
   def board_setup
@@ -42,23 +46,34 @@ class Game
     selected_square.piece = piece
   end
 
-  def move_piece(piece, from_position, to_position)
+  def move_piece(piece, from_position, to_position, other_player)
     # this will select the square on which the piece is
     selected_square = board.squares[from_position]
     # this will remove it
     selected_square.piece = nil
     # select new square
-    board.squares[to_position].piece = piece
+    # check if the selected square already contains other players piece
+    destination_square = board.squares[to_position]
+    remove_player_piece(other_player, destination_square, destination_square.piece) unless destination_square.nil?
+    destination_square.piece = piece
     piece.position = to_position
     board.display
+  end
+
+  def remove_player_piece(other_player, sqaure, piece)
+    return if sqaure.piece.nil?
+
+    other_player.pieces.delete(piece)
   end
 
   def user_input(player)
     row = nil
     column = nil
     loop do
-      puts "#{player.name}, please select row"
+      puts "#{player.name}, please select row or type 19 to save the game"
       row = gets.chomp.to_i
+      return 19 if row == 19
+
       puts "#{player.name}, please select column"
       puts 'to reset your choice, enter -1 and press enter'
       column = gets.chomp.to_i
@@ -71,33 +86,64 @@ class Game
   end
 
   def start
-    turn = 0
     loop do
-      player = turn.even? ? player1 : player2
-      other_player = turn.even? ? player2 : player1
-      turn += 1
-      turn(player)
+      player = @turn.even? ? player1 : player2
+      other_player = @turn.even? ? player2 : player1
+      turn(player, other_player)
+      if checkmate?(other_player)
+        puts "#{player.name} has won"
+        return
+      end
+      @turn += 1
     end
   end
 
-  def turn(player)
-    selected_square_coordinates = nil
-    destination_square_coordinates = nil
+  def checkmate?(player)
+    player.pieces.each { |piece| return false if piece.instance_of?(King) }
+    true
+  end
+
+  def turn(player, other_player)
     loop do
-      puts 'select the piece you want to move'
-      selected_square_coordinates = user_input(player)
-      break if right_chosen_square?(board.squares[selected_square_coordinates], player)
+      puts 'select the piece you want to move or type 19 to save game'
+      @selected_square_coordinates = user_input(player)
+      if @selected_square_coordinates == 19
+        save_game
+        puts 'Game saved. Exiting turn...'
+        return # Exit the turn method completely
+      end
+
+      break if right_chosen_square?(board.squares[@selected_square_coordinates], player)
     end
     loop do
       puts 'these are your available moves'
-      p available_sqaures(board.squares[selected_square_coordinates].piece, player)
+      p available_sqaures(board.squares[@selected_square_coordinates].piece, player)
       puts 'where do you want to move'
-      destination_square_coordinates = user_input(player)
-      break if right_destination_square?(board.squares[selected_square_coordinates].piece,
-                                         destination_square_coordinates, player)
+      @destination_square_coordinates = user_input(player)
+      break if right_destination_square?(board.squares[@selected_square_coordinates].piece,
+                                         @destination_square_coordinates, player)
     end
-    move_piece(board.squares[selected_square_coordinates].piece, selected_square_coordinates,
-               destination_square_coordinates)
+    move_piece(board.squares[@selected_square_coordinates].piece, @selected_square_coordinates,
+               @destination_square_coordinates, other_player)
+  end
+
+  def save_game
+    File.open('saved_game.dat', 'wb') do |file|
+      Marshal.dump(self, file)
+    end
+    puts 'Game has been saved'
+    @turn -= @turn
+  end
+
+  def self.load_game
+    if File.exist?('saved_game.dat')
+      File.open('saved_game.dat', 'rb') do |file|
+        Marshal.load(file)
+      end
+    else
+      puts 'no saved game found'
+      new(Player.new('hollow'), Player.new('filled'))
+    end
   end
 
   private

@@ -5,6 +5,7 @@ require_relative 'square'
 require_relative 'rook'
 require_relative 'bishop'
 require_relative 'queen'
+require_relative 'king'
 
 class Game
   attr_accessor :board, :player1, :player2
@@ -33,6 +34,7 @@ class Game
     assign_rooks
     assign_bishops
     assign_queens
+    assign_kings
   end
 
   def add_piece(piece)
@@ -147,5 +149,10 @@ class Game
   def assign_queens
     player1.pieces.concat([Queen.new([0, 3], '♕', 'hollow')])
     player2.pieces.concat([Queen.new([7, 3], '♛', 'filled')])
+  end
+
+  def assign_kings
+    player1.pieces.concat([King.new([0, 4], '♔', 'hollow')])
+    player2.pieces.concat([King.new([7, 4], '♚', 'filled')])
   end
 end

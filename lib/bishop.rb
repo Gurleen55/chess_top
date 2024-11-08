@@ -35,7 +35,6 @@ class Bishop
     loop do
       counter_direction = direction == 'right' ? 1 : -1
       counter_orientation = orientation == :up ? 1 : -1
-      # Adjust next_position based on orientation
       next_position = [i += counter_direction, j += counter_orientation]
       # boundry check
       break unless next_position[0].between?(0, 7) && next_position[1].between?(0, 7)

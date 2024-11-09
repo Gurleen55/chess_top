@@ -6,6 +6,7 @@ require_relative 'rook'
 require_relative 'bishop'
 require_relative 'queen'
 require_relative 'king'
+require_relative 'pawn'
 
 class Game
   attr_accessor :board, :player1, :player2
@@ -39,6 +40,7 @@ class Game
     assign_bishops
     assign_queens
     assign_kings
+    assign_pawns
   end
 
   def add_piece(piece)
@@ -71,18 +73,30 @@ class Game
     column = nil
     loop do
       puts "#{player.name}, please select row or type 19 to save the game"
-      row = gets.chomp.to_i
+      row = valid_input
       return 19 if row == 19
 
       puts "#{player.name}, please select column"
       puts 'to reset your choice, enter -1 and press enter'
-      column = gets.chomp.to_i
+      column = valid_input
       next if column == -1
       break if row.between?(0, 7) && column.between?(0, 7)
 
       puts 'please choose a number between 0 - 7'
     end
     [row, column]
+  end
+
+  def valid_input
+    input = gets.chomp
+    return -1 if input == '-1'
+    return 19 if input == '19'
+
+    begin
+      Integer(input)
+    rescue StandardError
+      -2
+    end
   end
 
   def start
@@ -200,5 +214,12 @@ class Game
   def assign_kings
     player1.pieces.concat([King.new([0, 4], '♔', 'hollow')])
     player2.pieces.concat([King.new([7, 4], '♚', 'filled')])
+  end
+
+  def assign_pawns
+    8.times do |i|
+      player1.pieces << Pawn.new([1, i], '♙', 'hollow')
+      player2.pieces << Pawn.new([6, i], '♝', 'filled')
+    end
   end
 end

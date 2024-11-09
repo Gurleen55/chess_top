@@ -126,7 +126,10 @@ class Game
         puts 'Game saved. Exiting turn...'
         return # Exit the turn method completely
       end
-
+      if available_sqaures(board.squares[@selected_square_coordinates].piece, player).empty?
+        puts 'no moves available, please choose a different square'
+        next
+      end
       break if right_chosen_square?(board.squares[@selected_square_coordinates], player)
     end
     loop do
